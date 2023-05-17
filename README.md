@@ -1,3 +1,3 @@
 # Review-API
-Pokémon Review API using ASP.NET WebAPI
+ Review API App using ASP.NET WebAPI
 
