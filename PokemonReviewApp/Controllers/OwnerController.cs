@@ -108,7 +108,7 @@ namespace PokemonReviewApp.Controllers
                                               $"{ownerObj.FirstName} + {ownerObj.LastName}");
                 return StatusCode(500, ModelState);
             }
-            return Ok("Owner Successfully Created");
+            return Ok("Owner added Successfully");
         }
 
 

@@ -12,24 +12,36 @@ namespace PokemonReviewApp.Repository
             _context = context;
         }
 
-        ICollection<Review> IReviewRepository.GetAllReviews()
+       public bool CreateReview(Review review)
+        {
+            _context.Reviews.Add(review);
+            return Save();
+        }
+
+        public ICollection<Review> GetAllReviews()
         {
             return _context.Reviews.OrderBy(review => review.Id).ToList();
         }
 
-        Review IReviewRepository.GetReview(int reviewId)
+        public Review GetReview(int reviewId)
         {
             return _context.Reviews.SingleOrDefault(r=>r.Id== reviewId);
         }
 
-        ICollection<Review> IReviewRepository.GetReviewsOfPokemon(int pokeId)
+        public ICollection<Review> GetReviewsOfPokemon(int pokeId)
         {
             return _context.Reviews.Where(r => r.Pokemon.Id == pokeId).ToList();
         }
 
-        bool IReviewRepository.IsReviewExist(int reviewId)
+        public bool IsReviewExist(int reviewId)
         {
             return _context.Reviews.Any(r => r.Id==reviewId);
+        }
+
+        public bool Save()
+        {
+            var saved = _context.SaveChanges();
+            return saved >= 0 ? true : false;
         }
     }
 }

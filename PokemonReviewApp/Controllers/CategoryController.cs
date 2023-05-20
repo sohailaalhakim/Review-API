@@ -103,7 +103,7 @@ namespace PokemonReviewApp.Controllers
                                                               $"{categoryObj.Name}");
                 return StatusCode(500, ModelState);
             }
-            return Ok("Category Successfully Created");
+            return Ok("Category added Successfully");
             //return CreatedAtRoute("GetCategory", new { categoryId = categoryToCreate.Id }, categoryToCreate);
         }
     }

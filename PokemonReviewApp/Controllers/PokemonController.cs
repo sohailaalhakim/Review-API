@@ -98,7 +98,7 @@ namespace PokemonReviewApp.Controllers
                                                               $"{pokemonObj.Name}");
                 return StatusCode(500, ModelState);
             }
-            return Ok("Pokemon Successfully Created");
+            return Ok("Pokemon added Successfully");
         }
 
 

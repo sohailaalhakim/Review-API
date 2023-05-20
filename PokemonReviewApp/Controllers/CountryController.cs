@@ -119,7 +119,7 @@ namespace PokemonReviewApp.Controllers
                                                               $"{countryObj.Name}");
                 return StatusCode(500, ModelState);
             }
-            return Ok("Country Successfully Created");
+            return Ok("Country added Successfully");
         }
 
     }

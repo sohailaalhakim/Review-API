@@ -13,25 +13,36 @@ namespace PokemonReviewApp.Repository
             _context = context;
         }
 
-        ICollection<Reviewer> IReviewerRepository.GetAllReviewer()
+        public bool CreateReviewer(Reviewer reviewer)
+        {
+            _context.Reviewers.Add(reviewer);
+            return Save();
+        }
+
+        public ICollection<Reviewer> GetAllReviewer()
         {
             return _context.Reviewers.OrderBy(p => p.Id).ToList();
         }
 
-        Reviewer IReviewerRepository.GetReviewer(int id)
+        public Reviewer GetReviewer(int id)
         {
             return _context.Reviewers.FirstOrDefault(p => p.Id == id);
         }
 
-        ICollection<Review> IReviewerRepository.GetReviewsByReviewer(int reviewerId)
+        public ICollection<Review> GetReviewsByReviewer(int reviewerId)
         {
             return _context.Reviews.Where(r=>r.Reviewer.Id== reviewerId).ToList();
         }
 
-        bool IReviewerRepository.IsReviewerExist(int reviewerId)
+        public bool IsReviewerExist(int reviewerId)
         {
             return _context.Reviewers.Any(p => p.Id == reviewerId);
 
+        }
+        public bool Save()
+        {
+            var saved = _context.SaveChanges();
+            return saved >= 0 ? true : false;
         }
     }
 }
