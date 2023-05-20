@@ -12,30 +12,42 @@ namespace PokemonReviewApp.Repository
         {
             _context = context;
         }
-        ICollection<Owner> IOwnerRepository.GetAllOwners()
+        public ICollection<Owner> GetAllOwners()
         {
             return _context.Owners.OrderBy(o => o.Id).ToList();
         }
 
-        Owner IOwnerRepository.GetOwner(int ownerId)
+        public Owner GetOwner(int ownerId)
         {
           return _context.Owners.FirstOrDefault(o=>o.Id==ownerId);
         }
 
-        ICollection<Owner> IOwnerRepository.GetOwnerOfAPokemon(int pokeId)
+        public ICollection<Owner> GetOwnerOfAPokemon(int pokeId)
         {
             return _context.PokemonOwners.Where(p => p.PokemonId == pokeId)
                 .Select(o => o.Owner).ToList();
         }
 
-        ICollection<Pokemon> IOwnerRepository.GetPokemonByOwner(int ownerId)
+        public ICollection<Pokemon> GetPokemonByOwner(int ownerId)
         {
             return _context.PokemonOwners.Where(p => p.OwnerId == ownerId).Select(p => p.Pokemon).ToList();
         }
 
-        bool IOwnerRepository.IsOwnerExist(int ownerId)
+        public bool IsOwnerExist(int ownerId)
         {
             return _context.Owners.Any(p => p.Id == ownerId);
+        }
+
+       public bool CreateOwner(Owner owner)
+        {
+            _context.Owners.Add(owner);
+            return Save();
+        }
+
+        public bool Save()
+        {
+            var saved = _context.SaveChanges();
+            return saved > 0 ? true : false;
         }
     }
 }

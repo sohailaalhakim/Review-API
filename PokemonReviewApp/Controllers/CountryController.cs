@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Pokemon_Review_System.Models;
 using PokemonReviewApp.DTO;
 using PokemonReviewApp.Interfaces;
+using PokemonReviewApp.Repository;
 
 namespace PokemonReviewApp.Controllers
 {
@@ -70,6 +71,7 @@ namespace PokemonReviewApp.Controllers
         }
 
         //get owners from country
+
         //[HttpGet("{countryId}")]
         //[ProducesResponseType(200, Type = typeof(IEnumerable<Owner>))]
         //[ProducesResponseType(400)]
@@ -85,6 +87,40 @@ namespace PokemonReviewApp.Controllers
         //    return Ok(owners);
         //}
 
+        //create country
+        [HttpPost]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        
+        public IActionResult CreateCountry([FromBody] CountryDTO countryToCreate)
+        {
+            if(countryToCreate == null)
+                return BadRequest(ModelState);  
+
+            var country = _countryRepository.GetAllCountries()
+                .Where(c => c.Name.Trim().ToUpper() == countryToCreate.Name.Trim().ToUpper())
+                .FirstOrDefault();
+
+            if(country != null)
+            {
+                ModelState.AddModelError("", $"Country {countryToCreate.Name} already exists");
+                return StatusCode(422, ModelState);
+            }
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var countryObj = _mapper.Map<Country>(countryToCreate);
+
+
+            if (!_countryRepository.CreateCountry(countryObj))
+            {
+                ModelState.AddModelError("", $"Something went wrong saving the country " +
+                                                              $"{countryObj.Name}");
+                return StatusCode(500, ModelState);
+            }
+            return Ok("Country Successfully Created");
+        }
 
     }
 } 

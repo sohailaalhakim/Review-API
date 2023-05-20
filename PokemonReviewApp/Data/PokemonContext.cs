@@ -19,29 +19,27 @@ namespace Pokemon_Review_System.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<PokemonCategory>()
-                //en 3ando el PK Composite from PokemonId and CategoryId
-                .HasKey(pc => new { pc.PokemonId, pc.CategoryId });
-
+                      //composite key
+                     .HasKey(pc => new { pc.PokemonId, pc.CategoryId });
             modelBuilder.Entity<PokemonCategory>()
-                     .HasOne(P => P.Pokemon)
-                     .WithMany(PC => PC.PokemonCategories)
-                     .HasForeignKey(C => C.CategoryId);
+                    .HasOne(p => p.Pokemon)
+                    .WithMany(pc => pc.PokemonCategories)
+                    .HasForeignKey(p => p.PokemonId);
             modelBuilder.Entity<PokemonCategory>()
-                        .HasOne(p => p.Category)
-                        .WithMany(pc => pc.PokemonCategories)
-                        .HasForeignKey(c => c.CategoryId);
+                    .HasOne(p => p.Category)
+                    .WithMany(pc => pc.PokemonCategories)
+                    .HasForeignKey(c => c.CategoryId);
 
             modelBuilder.Entity<PokemonOwner>()
-      .HasKey(pc => new { pc.PokemonId, pc.OwnerId });
-
+                    .HasKey(po => new { po.PokemonId, po.OwnerId });
             modelBuilder.Entity<PokemonOwner>()
-                     .HasOne(P => P.Pokemon)
-                     .WithMany(PC => PC.PokemonOwners)
-                     .HasForeignKey(C => C.OwnerId);
+                    .HasOne(p => p.Pokemon)
+                    .WithMany(pc => pc.PokemonOwners)
+                    .HasForeignKey(p => p.PokemonId);
             modelBuilder.Entity<PokemonOwner>()
-                        .HasOne(p => p.Owner)
-                        .WithMany(pc => pc.PokemonOwners)
-                        .HasForeignKey(c => c.OwnerId);
+                    .HasOne(p => p.Owner)
+                    .WithMany(pc => pc.PokemonOwners)
+                    .HasForeignKey(c => c.OwnerId);
         }
 
 
