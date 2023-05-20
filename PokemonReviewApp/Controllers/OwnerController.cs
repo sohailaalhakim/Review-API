@@ -80,7 +80,7 @@ namespace PokemonReviewApp.Controllers
         [HttpPost]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
-        public IActionResult CreateOwner([FromQuery] int id , [FromBody] OwnerDTO ownerToCreate)
+        public IActionResult CreateOwner([FromQuery] int countryId , [FromBody] OwnerDTO ownerToCreate)
         {
             if (ownerToCreate == null)
                 return BadRequest(ModelState);
@@ -91,7 +91,7 @@ namespace PokemonReviewApp.Controllers
 
             if (country != null)
             {
-                ModelState.AddModelError("", $"Country {ownerToCreate.LastName} + {ownerToCreate.LastName} already exists");
+                ModelState.AddModelError("", $"owner {ownerToCreate.FirstName} {ownerToCreate.LastName} already exists");
                 return StatusCode(422, ModelState);
             }
 
@@ -100,15 +100,69 @@ namespace PokemonReviewApp.Controllers
 
             var ownerObj = _mapper.Map<Owner>(ownerToCreate);
             //owner has country so we need to assign the owner to a country
-            ownerObj.Country = _countryRepository.GetCountry(id);
+            ownerObj.Country = _countryRepository.GetCountry(countryId);
 
             if (!_ownerRepository.CreateOwner(ownerObj))
             {
                 ModelState.AddModelError("", $"Something went wrong saving the owner " +
-                                              $"{ownerObj.FirstName} + {ownerObj.LastName}");
+                                              $"{ownerObj.FirstName} {ownerObj.LastName}");
                 return StatusCode(500, ModelState);
             }
-            return Ok("Owner added Successfully");
+            return Ok($"{ownerObj.FirstName} {ownerObj.LastName} added successfully");
+        }
+        //update owner
+        [HttpPut("{ownerId}")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public IActionResult UpdateOwner(int ownerId, [FromBody] OwnerDTO ownerToUpdate)
+        {
+            if (ownerToUpdate == null)
+                return BadRequest(ModelState);
+
+            if (ownerId != ownerToUpdate.Id)
+                return BadRequest(ModelState);
+
+            if (!_ownerRepository.IsOwnerExist(ownerId))
+                return NotFound();
+
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            var ownerObj = _mapper.Map<Owner>(ownerToUpdate);
+
+            if (!_ownerRepository.UpdateOwner(ownerObj))
+            {
+                ModelState.AddModelError("", $"Something went wrong updating the owner " +
+                                                    $"{ownerObj.FirstName} {ownerObj.LastName}");
+                return StatusCode(500, ModelState);
+            }
+            return Ok($"{ownerObj.FirstName} {ownerObj.LastName} updated successfully");
+        }
+
+        //delete owner
+        [HttpDelete("{ownerId}")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public IActionResult DeleteOwner(int ownerId)
+        {
+            if (!_ownerRepository.IsOwnerExist(ownerId))
+            {
+                return NotFound();
+            }
+
+            var ownerToDelete = _ownerRepository.GetOwner(ownerId);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (!_ownerRepository.DeleteOwner(ownerToDelete))
+            {
+                ModelState.AddModelError("", $"Something went wrong deleting the owner " +
+                                      $"{ownerToDelete.FirstName} + {ownerToDelete.LastName}");
+            }
+            return Ok($"{ownerToDelete.FirstName}{ownerToDelete.LastName} deleted successfully");
         }
 
 

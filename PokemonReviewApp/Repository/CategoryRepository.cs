@@ -35,10 +35,22 @@ namespace PokemonReviewApp.Repository
             return Save();
         }
 
+        bool ICategoryRepository.UpdateCategory(Category category)
+        {
+            _context.Categories.Update(category);
+            return Save();
+        }
+
+        bool ICategoryRepository.DeleteCategory(Category category)
+        {
+            _context.Categories.Remove(category);
+            return Save();
+        }
         public bool Save()
         {
             var saved = _context.SaveChanges();
             return saved > 0 ? true : false;
         }
+
     }
 }

@@ -12,8 +12,8 @@ using Pokemon_Review_System.Data;
 namespace PokemonReviewApp.Migrations
 {
     [DbContext(typeof(PokemonContext))]
-    [Migration("20230520021107_fk")]
-    partial class fk
+    [Migration("20230520050340_initcascade")]
+    partial class initcascade
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

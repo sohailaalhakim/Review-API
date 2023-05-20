@@ -43,6 +43,18 @@ namespace PokemonReviewApp.Repository
             return _context.Countries.Any(c => c.Id == id);
         }
 
+        public  bool DeleteCountry(Country country)
+        {
+            _context.Countries.Remove(country);
+            return Save();
+        }
+
+       public  bool UpdateCountry(Country country)
+        {
+            _context.Countries.Update(country);
+            return Save();
+
+        }
         public bool Save()
         {
             var saved = _context.SaveChanges();

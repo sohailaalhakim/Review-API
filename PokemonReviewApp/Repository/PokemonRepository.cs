@@ -69,8 +69,6 @@ namespace PokemonReviewApp.Repository
 
             return Save();
         }
-
-
         public Pokemon GetPokemonById(int pokemonId)
         {
            return _context.Pokemon.Where(p => p.Id == pokemonId).FirstOrDefault();
@@ -90,12 +88,20 @@ namespace PokemonReviewApp.Repository
             return ((decimal)reviews.Sum(r => r.Rating) / reviews.Count());
               
         }
-
+        public bool UpdatePokemon(int ownerId, int categoryId, Pokemon pokemon)
+        {
+            _context.Update(pokemon);
+            return Save();
+        }
+        public bool DeletePokemon(Pokemon pokemon)
+        {
+            _context.Pokemon.Remove(pokemon);
+            return Save();
+        }
         public bool IsPokemonExist(int pokemonId)
         {
             return _context.Pokemon.Any(p => p.Id == pokemonId);
         }
-
         public bool Save()
         {
             var saved = _context.SaveChanges();

@@ -32,7 +32,23 @@ namespace PokemonReviewApp.Repository
         {
             return _context.Reviews.Where(r => r.Pokemon.Id == pokeId).ToList();
         }
+        public bool UpdateReview(Review review)
+        {
+            _context.Reviews.Update(review);
+            return Save();
+        }
 
+        public bool DeleteReview(Review review)
+        {
+            _context.Reviews.RemoveRange(review);
+            return Save();
+        }
+
+        public bool DeleteReviews(List<Review> reviews)
+        {
+            _context.RemoveRange(reviews);
+            return Save();
+        }
         public bool IsReviewExist(int reviewId)
         {
             return _context.Reviews.Any(r => r.Id==reviewId);

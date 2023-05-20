@@ -104,5 +104,60 @@ namespace PokemonReviewApp.Controllers
             return Ok("Review added Successfully ");
         }
 
+        //update reviewer
+        [HttpPut("{reviewerId}")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public IActionResult UpdateReviewer(int reviewerId, [FromBody] ReviewerDTO reviewerToUpdate)
+        {
+            if (reviewerToUpdate == null)
+                return BadRequest(ModelState);
+
+            if (reviewerId != reviewerToUpdate.Id)
+                return BadRequest(ModelState);
+
+            if (!_reviewerRepository.IsReviewerExist(reviewerId))
+                return NotFound();
+
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            var reviewerObj = _mapper.Map<Reviewer>(reviewerToUpdate);
+
+            if (!_reviewerRepository.UpdateReviewer(reviewerObj))
+            {
+                ModelState.AddModelError("", $"Something went wrong updating the reviewer " +
+                                                    $"{reviewerObj.FirstName} {reviewerObj.LastName}");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok($"{reviewerObj.FirstName} {reviewerObj.LastName} updated successfully");
+        }
+
+        //delete reviewer
+        [HttpDelete("{reviewerId}")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public IActionResult DeleteReviewer(int reviewerId)
+        {
+            if (!_reviewerRepository.IsReviewerExist(reviewerId))
+                return NotFound();
+
+            var reviewerToDelete = _reviewerRepository.GetReviewer(reviewerId);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (!_reviewerRepository.DeleteReviewer(reviewerToDelete))
+            {
+                ModelState.AddModelError("", $"Something went wrong deleting the country " +
+                                      $"{reviewerToDelete.FirstName} {reviewerToDelete.LastName}");
+            }
+
+            return Ok($"{reviewerToDelete.FirstName} {reviewerToDelete.LastName} deleted successfully");
+        }
+
     }
 }

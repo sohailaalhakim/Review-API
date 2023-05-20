@@ -122,5 +122,61 @@ namespace PokemonReviewApp.Controllers
             return Ok("Country added Successfully");
         }
 
+        //update country
+        [HttpPut("{countryId}")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public IActionResult UpdateCategory(int countryId, [FromBody] CountryDTO updatedCountry)
+        {
+            if (updatedCountry == null)
+                return BadRequest(ModelState);
+
+            if (countryId != updatedCountry.Id)
+                return BadRequest(ModelState);
+
+            if (!_countryRepository.IsCountryExist(countryId))
+                return NotFound();
+
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            var countryObj = _mapper.Map<Country>(updatedCountry);
+
+            if (!_countryRepository.UpdateCountry(countryObj))
+            {
+                ModelState.AddModelError("", $"Something went wrong updating the country " +
+                                                    $"{countryObj.Name}");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok($"{countryObj.Name} updated successfully");
+        }
+        //delete country
+        [HttpDelete("{countryId}")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public IActionResult DeleteCountry(int countryId)
+        {
+            if (!_countryRepository.IsCountryExist(countryId))
+            {
+                return NotFound();
+            }
+
+            var countryToDelete = _countryRepository.GetCountry(countryId);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (!_countryRepository.DeleteCountry(countryToDelete))
+            {
+                ModelState.AddModelError("", $"Something went wrong deleting the country " +
+                                      $"{countryToDelete.Name}");
+            }
+
+            return Ok($"{countryToDelete.Name} deleted successfully");
+        }
+
     }
 } 

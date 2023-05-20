@@ -24,22 +24,32 @@ namespace Pokemon_Review_System.Data
             modelBuilder.Entity<PokemonCategory>()
                     .HasOne(p => p.Pokemon)
                     .WithMany(pc => pc.PokemonCategories)
-                    .HasForeignKey(p => p.PokemonId);
+                    .HasForeignKey(p => p.PokemonId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
             modelBuilder.Entity<PokemonCategory>()
                     .HasOne(p => p.Category)
                     .WithMany(pc => pc.PokemonCategories)
-                    .HasForeignKey(c => c.CategoryId);
+                    .HasForeignKey(c => c.CategoryId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
 
             modelBuilder.Entity<PokemonOwner>()
                     .HasKey(po => new { po.PokemonId, po.OwnerId });
             modelBuilder.Entity<PokemonOwner>()
                     .HasOne(p => p.Pokemon)
                     .WithMany(pc => pc.PokemonOwners)
-                    .HasForeignKey(p => p.PokemonId);
+                    .HasForeignKey(p => p.PokemonId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
             modelBuilder.Entity<PokemonOwner>()
                     .HasOne(p => p.Owner)
                     .WithMany(pc => pc.PokemonOwners)
-                    .HasForeignKey(c => c.OwnerId);
+                    .HasForeignKey(c => c.OwnerId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+ 
+
         }
 
 

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace PokemonReviewApp.Migrations
 {
     /// <inheritdoc />
-    public partial class fk : Migration
+    public partial class initcascade : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

@@ -44,6 +44,17 @@ namespace PokemonReviewApp.Repository
             return Save();
         }
 
+        public bool UpdateOwner(Owner owner)
+        {
+            _context.Owners.Update(owner);
+            return Save();
+        }
+
+       public  bool DeleteOwner(Owner owner)
+        {
+            _context.Owners.Remove(owner);
+            return Save();
+        }
         public bool Save()
         {
             var saved = _context.SaveChanges();

@@ -33,6 +33,16 @@ namespace PokemonReviewApp.Repository
         {
             return _context.Reviews.Where(r=>r.Reviewer.Id== reviewerId).ToList();
         }
+        public bool UpdateReviewer(Reviewer reviewer)
+        {
+            _context.Reviewers.Update(reviewer);
+            return Save();
+        }
+        public bool DeleteReviewer(Reviewer reviewer)
+        {
+            _context.Reviewers.Remove(reviewer);
+            return Save();
+        }
 
         public bool IsReviewerExist(int reviewerId)
         {
